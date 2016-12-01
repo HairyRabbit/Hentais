@@ -14,13 +14,13 @@
 (require 'dash)
 (require 's)
 
-(defvar placeholder-regex "{{\\([^}]+\\)}}")
+(defvar tpl/placeholder-regex "{{\\([^}]+\\)}}")
 
 (defun tpl/pick-placeholders (template)
   "\
 Pick all of placeholders.
 "
-  (s-match-strings-all placeholder-regex
+  (s-match-strings-all tpl/placeholder-regex
                        template))
 
 (defun tpl/replace-placeholds (template data-list)
@@ -28,12 +28,10 @@ Pick all of placeholders.
 Make replace pairs alist for render.
 "
   (let ((pick-list (tpl/pick-placeholders template)))
-
     (-map (lambda (picked)
             (let ((placeholder (car picked))
                   (name (cadr picked)))
-              `(,placeholder . ,(alist-get (intern name) data-list))
-              ))
+              `(,placeholder . ,(alist-get (intern name) data-list))))
           pick-list)))
 
 (defun tpl/render (template data-list)
